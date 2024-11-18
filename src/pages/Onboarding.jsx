@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/clerk-react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BarLoader } from "react-spinners";
 
@@ -7,7 +8,7 @@ const Onboarding = () => {
   const { user, isLoaded } = useUser();
   const navigate = useNavigate()
 
-  const handleRoleSelection = async () => {
+  const handleRoleSelection = async (role) => {
     await user.update({
       unsafeMetadata: {role},
     }).then(() => {
@@ -17,6 +18,12 @@ const Onboarding = () => {
       console.log(err);
     })
   }
+
+  useEffect(() => {
+    if (user?.unsafeMetadata?.role) {
+      navigate(user?.unsafeMetadata?.role == "recruiter" ? "/post-job" : "/jobs")
+    }
+  }, [])
 
   if (!isLoaded) {
     return <BarLoader className="mb-4" width={"100%"} color="#36d7d7" />;
