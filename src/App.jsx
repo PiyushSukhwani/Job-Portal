@@ -40,7 +40,7 @@ function App() {
           ),
         },
         {
-          path: "/jobs/:id",
+          path: "/job/:id",
           element: (
             <ProtectedRoute>
               <JobPage />
