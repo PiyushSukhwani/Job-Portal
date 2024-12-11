@@ -1,4 +1,12 @@
-import { getSingleJob } from "@/api/apiJobs";
+import { getSingleJob, updateHiringStatus } from "@/api/apiJobs";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import useFetch from "@/hooks/useFetch";
 import { useUser } from "@clerk/clerk-react";
 import MDEditor from "@uiw/react-md-editor";
@@ -15,10 +23,22 @@ const JobPage = () => {
     loading: loadingJob,
     data: job,
     fn: fnJob,
-    error: errorJob,
   } = useFetch(getSingleJob, {
     job_id: id,
   });
+
+  const { loading: loadingHiringStatus, fn: fnHiringStatus } = useFetch(
+    updateHiringStatus,
+    {
+      job_id: id,
+    }
+  );
+
+  const handleStatusChange = (value) => {
+    const isOpen = value === "open";
+
+    fnHiringStatus(isOpen).then(() => fnJob());
+  };
 
   useEffect(() => {
     if (isLoaded) fnJob();
@@ -57,7 +77,27 @@ const JobPage = () => {
           )}
         </div>
       </div>
-      {/* hiring status */}
+
+      {loadingHiringStatus && <BarLoader width={"100%"} color="#36d7d7" />}
+      {job?.recruiter_id === user?.id && (
+        <Select onValueChange={(value) => handleStatusChange(value)}>
+          <SelectTrigger
+            className={`w-full ${job?.isOpen ? "bg-green-950" : "bg-red-950"}`}
+          >
+            <SelectValue
+              placeholder={
+                "Hiring Status " + (job?.isOpen ? "(Open)" : "(Closed)")
+              }
+            />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="closed">Closed</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      )}
 
       <h2 className="text-2xl sm:text-3xl font-bold">About the job</h2>
       <p className="sm:text-lg">{job?.description}</p>
@@ -66,8 +106,8 @@ const JobPage = () => {
         What we are looking for
       </h2>
       <MDEditor.Markdown
-      source={job?.requirements}
-      className="bg-transparent sm:text-lg"
+        source={job?.requirements}
+        className="bg-transparent sm:text-lg"
       />
 
       {/* render applications */}
