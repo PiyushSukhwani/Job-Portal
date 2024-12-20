@@ -20,12 +20,12 @@ export async function addNewCompany(token, _, companyData) {
   const fileName = `logo-${random}-${companyData.name}`;
 
   const { error: storageError } = await supabase.storage
-    .from("company-logo")
+    .from("company_logo")
     .upload(fileName, companyData.logo);
 
   if (storageError) {
-    console.error("Error uploading companay ", error);
-    return null;
+    console.error("Error uploading company,", storageError);
+    throw new Error("Error uploading Company Logo");
   }
 
   const logo_url = `${supabaseUrl}/storage/v1/object/public/company-logo/${fileName}`;
@@ -35,14 +35,14 @@ export async function addNewCompany(token, _, companyData) {
     .insert([
       {
         name: companyData.name,
-        logo_url,
+        logo_url: logo_url,
       },
     ])
     .select();
 
   if (error) {
-    console.error("Error submitting company: ", error);
-    return null;
+    console.error(error);
+    throw new Error("Error submitting Company");
   }
 
   return data;
