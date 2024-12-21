@@ -69,6 +69,10 @@ Contributions are welcome! If you'd like to contribute to HIRRD, please:
 2. Create a new branch for your feature/bugfix.
 3. Submit a pull request with a clear description of your changes.
 
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Contact
 
 For any questions or suggestions, please contact [piyushsukhwani7@gmail.com] or create an issue in the repository.
