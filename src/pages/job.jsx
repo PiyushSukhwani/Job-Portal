@@ -112,7 +112,6 @@ const JobPage = () => {
         className="bg-transparent sm:text-lg"
       />
 
-      {/* render applications */}
       {job?.recruiter_id !== user?.id && (
         <ApplyJobDrawer
           job={job}

@@ -36,8 +36,6 @@ const JobListing = () => {
 
   const { fn: fnCompanies, data: companies } = useFetch(getCompanies);
 
-  console.log(jobs);
-
   useEffect(() => {
     if (isLoaded) fnCompanies();
   }, [isLoaded]);
@@ -70,7 +68,6 @@ const JobListing = () => {
         Latest Jobs
       </h1>
 
-      {/* add filters */}
       <form
         onSubmit={handleSearch}
         className="h-14 flex w-full gap-2 items-center mb-3"
